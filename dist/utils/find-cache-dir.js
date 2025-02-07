@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findCacheDirectory = void 0;
+exports.findCacheDirectory = findCacheDirectory;
 const node_process_1 = __importDefault(require("node:process"));
 const node_path_1 = __importDefault(require("node:path"));
 const node_fs_1 = __importDefault(require("node:fs"));
@@ -89,6 +89,5 @@ function findCacheDirectory(options) {
         return undefined;
     return useDirectory(node_path_1.default.join(pkgDir, 'node_modules', '.cache', options.name), options);
 }
-exports.findCacheDirectory = findCacheDirectory;
 // endregion
 //# sourceMappingURL=find-cache-dir.js.map

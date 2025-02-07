@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMergeStatementsTransformer = void 0;
+exports.createMergeStatementsTransformer = createMergeStatementsTransformer;
 const typescript_1 = __importDefault(require("typescript"));
 /* ****************************************************************************************************************** */
 // region: Utils
@@ -56,6 +56,5 @@ function createMergeStatementsTransformer(baseSourceFile, sourceFile) {
         };
     };
 }
-exports.createMergeStatementsTransformer = createMergeStatementsTransformer;
 // endregion
 //# sourceMappingURL=merge-statements.js.map

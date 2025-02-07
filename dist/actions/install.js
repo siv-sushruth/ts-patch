@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.install = void 0;
+exports.install = install;
 const chalk_1 = __importDefault(require("chalk"));
 const __1 = require("..");
 const config_1 = require("../config");
@@ -21,6 +21,5 @@ function install(opts) {
         log(['+', chalk_1.default.green(`ts-patch installed!`)]);
     return ret;
 }
-exports.install = install;
 // endregion
 //# sourceMappingURL=install.js.map

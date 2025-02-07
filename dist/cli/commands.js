@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCliCommand = exports.cliCommandsConfig = void 0;
+exports.cliCommandsConfig = void 0;
+exports.getCliCommand = getCliCommand;
 const chalk_1 = __importDefault(require("chalk"));
 /* ****************************************************************************************************************** */
 // region: Config
@@ -16,10 +17,10 @@ exports.cliCommandsConfig = {
         short: 'c', caption: `Check patch status (use with ${chalk_1.default.cyanBright('--dir')} to specify TS package location)`
     },
     patch: {
-        short: void 0, paramCaption: '<module_file> | <glob>', caption: 'Patch specific module(s) ' + chalk_1.default.yellow('(advanced)')
+        short: void 0, paramCaption: '<module_file>', caption: 'Patch specific module(s) ' + chalk_1.default.yellow('(advanced)')
     },
     unpatch: {
-        short: void 0, paramCaption: '<module_file> | <glob>', caption: 'Un-patch specific module(s) ' + chalk_1.default.yellow('(advanced)')
+        short: void 0, paramCaption: '<module_file>', caption: 'Un-patch specific module(s) ' + chalk_1.default.yellow('(advanced)')
     },
     'clear-cache': { caption: 'Clears cache and lock-files' },
     version: { short: 'v', caption: 'Show version' },
@@ -44,6 +45,5 @@ function getCliCommand(args) {
         .find(([long, { short }]) => long === cmd || short === cmd)?.[0];
     return cmd;
 }
-exports.getCliCommand = getCliCommand;
 // endregion
 //# sourceMappingURL=commands.js.map

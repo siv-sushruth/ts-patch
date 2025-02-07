@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTsPackage = void 0;
+exports.getTsPackage = getTsPackage;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const resolve_1 = __importDefault(require("resolve"));
@@ -69,6 +69,5 @@ function getTsPackage(dir = process.cwd()) {
     }
     throw new system_1.PackageError(`Could not find typescript package from ${dir}`);
 }
-exports.getTsPackage = getTsPackage;
 // endregion
 //# sourceMappingURL=ts-package.js.map

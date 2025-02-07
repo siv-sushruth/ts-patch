@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getModuleFile = void 0;
+exports.getModuleFile = getModuleFile;
 const fs_1 = __importDefault(require("fs"));
 const patch_detail_1 = require("../patch/patch-detail");
 const path_1 = __importDefault(require("path"));
 const utils_1 = require("../utils");
+const ts_module_1 = require("./ts-module");
 /* ****************************************************************************************************************** */
 // region: Config
 /* ****************************************************************************************************************** */
@@ -76,16 +77,20 @@ function readFile(filePath, headersOnly) {
 // region: Utils
 /* ****************************************************************************************************************** */
 function getModuleFile(filePath, loadFullContent) {
-    let { headerLines, content } = readFile(filePath, !loadFullContent);
+    /* Determine shim redirect file - see: https://github.com/nonara/ts-patch/issues/174 */
+    const moduleName = path_1.default.basename(filePath);
+    const contentFilePath = ts_module_1.TsModule.getContentFilePathForModulePath(filePath);
     /* Get PatchDetail */
+    let { headerLines, content } = readFile(contentFilePath, !loadFullContent);
     const patchDetail = patch_detail_1.PatchDetail.fromHeader(headerLines);
     return {
-        moduleName: path_1.default.basename(filePath),
+        moduleName,
         filePath,
+        contentFilePath,
         patchDetail,
         get content() {
             if (content == null)
-                content = readFile(this.filePath, false).content;
+                content = readFile(this.contentFilePath, false).content;
             return content;
         },
         getHash() {
@@ -93,6 +98,5 @@ function getModuleFile(filePath, loadFullContent) {
         }
     };
 }
-exports.getModuleFile = getModuleFile;
 // endregion
 //# sourceMappingURL=module-file.js.map

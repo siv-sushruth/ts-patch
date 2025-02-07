@@ -3,6 +3,7 @@ export interface ModuleFile {
     moduleName: string;
     patchDetail?: PatchDetail;
     filePath: string;
+    contentFilePath: string;
     get content(): string;
     getHash(): string;
 }

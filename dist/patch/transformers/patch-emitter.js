@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchEmitterTransformer = void 0;
+exports.patchEmitterTransformer = patchEmitterTransformer;
 const typescript_1 = __importDefault(require("typescript"));
 /* ****************************************************************************************************************** */
 // region: Utils
@@ -40,6 +40,5 @@ function patchEmitterTransformer(context) {
         }
     };
 }
-exports.patchEmitterTransformer = patchEmitterTransformer;
 // endregion
 //# sourceMappingURL=patch-emitter.js.map

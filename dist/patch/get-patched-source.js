@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPatchedSource = void 0;
+exports.getPatchedSource = getPatchedSource;
 const system_1 = require("../system");
 const chalk_1 = __importDefault(require("chalk"));
 const path_1 = __importDefault(require("path"));
@@ -21,7 +21,7 @@ function getPatchedSource(tsModule, options) {
     /* Write backup if not patched */
     if (!tsModule.isPatched) {
         for (const [key, backupPath] of Object.entries(backupCachePaths)) {
-            const srcPath = key === 'dts' ? tsModule.dtsPath : tsModule.modulePath;
+            const srcPath = key === 'dts' ? tsModule.dtsPath : tsModule.moduleContentFilePath;
             if (key === 'dts' && options?.skipDts)
                 continue;
             if (!srcPath)
@@ -65,6 +65,5 @@ function getPatchedSource(tsModule, options) {
     }
     return { js, dts, loadedFromCache: canUseCache };
 }
-exports.getPatchedSource = getPatchedSource;
 // endregion
 //# sourceMappingURL=get-patched-source.js.map

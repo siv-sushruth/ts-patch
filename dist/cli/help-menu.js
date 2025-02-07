@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getHelpMenu = void 0;
+exports.getHelpMenu = getHelpMenu;
 const chalk_1 = __importDefault(require("chalk"));
 const strip_ansi_1 = __importDefault(require("strip-ansi"));
 const commands_1 = require("./commands");
@@ -39,6 +39,5 @@ function getHelpMenu() {
         return `${leftCol} ${dots} ${caption}`;
     }
 }
-exports.getHelpMenu = getHelpMenu;
 // endregion
 //# sourceMappingURL=help-menu.js.map

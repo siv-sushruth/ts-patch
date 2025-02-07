@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInstallerOptionsFromCliOptions = exports.getCliOptions = exports.cliOptionsConfig = void 0;
+exports.cliOptionsConfig = void 0;
+exports.getCliOptions = getCliOptions;
+exports.getInstallerOptionsFromCliOptions = getInstallerOptionsFromCliOptions;
 const system_1 = require("../system");
 const options_1 = require("../options");
 const utils_1 = require("../utils");
@@ -34,7 +36,6 @@ function getCliOptions(args) {
     }
     return res;
 }
-exports.getCliOptions = getCliOptions;
 function getInstallerOptionsFromCliOptions(cliOptions) {
     let partialOptions = {};
     /* Dir option */
@@ -58,6 +59,5 @@ function getInstallerOptionsFromCliOptions(cliOptions) {
         partialOptions.useColor = cliOptions.color;
     return (0, options_1.getInstallerOptions)(partialOptions);
 }
-exports.getInstallerOptionsFromCliOptions = getInstallerOptionsFromCliOptions;
 // endregion
 //# sourceMappingURL=options.js.map

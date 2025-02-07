@@ -3,7 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.copyFileWithLock = exports.readFileWithLock = exports.writeFileWithLock = exports.withFileLock = exports.mkdirIfNotExist = exports.getGlobalTsDir = void 0;
+exports.mkdirIfNotExist = void 0;
+exports.getGlobalTsDir = getGlobalTsDir;
+exports.withFileLock = withFileLock;
+exports.writeFileWithLock = writeFileWithLock;
+exports.readFileWithLock = readFileWithLock;
+exports.copyFileWithLock = copyFileWithLock;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const ts_package_1 = require("../ts-package");
@@ -54,7 +59,6 @@ function getGlobalTsDir() {
         throw new system_1.PackageError(`Could not find global TypeScript installation! Are you sure it's installed globally?`);
     return packageDir;
 }
-exports.getGlobalTsDir = getGlobalTsDir;
 const mkdirIfNotExist = (dir) => !fs_1.default.existsSync(dir) && fs_1.default.mkdirSync(dir, { recursive: true });
 exports.mkdirIfNotExist = mkdirIfNotExist;
 function withFileLock(filePath, fn) {
@@ -70,22 +74,19 @@ function withFileLock(filePath, fn) {
     }
     finally {
         if (fs_1.default.existsSync(lockFilePath))
-            fs_1.default.unlinkSync(lockFilePath);
+            fs_1.default.rmSync(lockFilePath, { force: true });
     }
 }
-exports.withFileLock = withFileLock;
 function writeFileWithLock(filePath, content) {
     withFileLock(filePath, () => {
         fs_1.default.writeFileSync(filePath, content);
     });
 }
-exports.writeFileWithLock = writeFileWithLock;
 function readFileWithLock(filePath) {
     return withFileLock(filePath, () => {
         return fs_1.default.readFileSync(filePath, 'utf8');
     });
 }
-exports.readFileWithLock = readFileWithLock;
 function copyFileWithLock(src, dest) {
     withFileLock(src, () => {
         withFileLock(dest, () => {
@@ -93,6 +94,5 @@ function copyFileWithLock(src, dest) {
         });
     });
 }
-exports.copyFileWithLock = copyFileWithLock;
 // endregion
 //# sourceMappingURL=file-utils.js.map

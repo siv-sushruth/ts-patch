@@ -7,5 +7,9 @@ export interface ModuleSource {
     fileFooter?: SourceSection;
     usesTsNamespace: boolean;
     getSections(): [sectionName: SourceSection['sectionName'], section: SourceSection | undefined][];
+    bodyWrapper?: {
+        start: string;
+        end: string;
+    };
 }
 export declare function getModuleSource(tsModule: TsModule): ModuleSource;

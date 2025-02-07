@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unpatch = void 0;
+exports.unpatch = unpatch;
 const system_1 = require("../system");
 const chalk_1 = __importDefault(require("chalk"));
 const path_1 = __importDefault(require("path"));
@@ -55,7 +55,12 @@ function unpatch(moduleNameOrNames, opts) {
                 if (!fs_1.default.existsSync(backupPath))
                     throw new Error(`Cannot find backup file: ${backupPath}. Try reinstalling typescript.`);
                 const moduleDir = path_1.default.dirname(tsModule.modulePath);
-                const destPath = path_1.default.join(moduleDir, path_1.default.basename(backupPath));
+                /* Determine destination path (Need to use moduleContentPath if we're working with a cached module file */
+                const baseFileName = path_1.default.basename(backupPath);
+                const destPathName = baseFileName === tsModule.moduleName
+                    ? path_1.default.basename(tsModule.moduleContentFilePath)
+                    : baseFileName;
+                const destPath = path_1.default.join(moduleDir, destPathName);
                 (0, utils_1.copyFileWithLock)(backupPath, destPath);
             }
             log(['+', chalk_1.default.green(`Successfully restored ${chalk_1.default.bold.yellow(baseNames)}.\r\n`)], system_1.LogLevel.verbose);
@@ -78,6 +83,5 @@ function unpatch(moduleNameOrNames, opts) {
     }
     return res;
 }
-exports.unpatch = unpatch;
 // endregion
 //# sourceMappingURL=unpatch.js.map

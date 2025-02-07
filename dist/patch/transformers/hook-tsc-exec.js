@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hookTscExecTransformer = void 0;
+exports.hookTscExecTransformer = hookTscExecTransformer;
 const typescript_1 = __importDefault(require("typescript"));
 /* ****************************************************************************************************************** */
 // region: Utils
@@ -28,6 +28,5 @@ function hookTscExecTransformer(context) {
         }
     };
 }
-exports.hookTscExecTransformer = hookTscExecTransformer;
 // endregion
 //# sourceMappingURL=hook-tsc-exec.js.map

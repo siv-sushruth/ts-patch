@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchCreateProgramTransformer = void 0;
+exports.patchCreateProgramTransformer = patchCreateProgramTransformer;
 const typescript_1 = __importDefault(require("typescript"));
 /* ****************************************************************************************************************** */
 // region: Utils
@@ -32,6 +32,5 @@ function patchCreateProgramTransformer(context) {
         }
     };
 }
-exports.patchCreateProgramTransformer = patchCreateProgramTransformer;
 // endregion
 //# sourceMappingURL=patch-create-program.js.map

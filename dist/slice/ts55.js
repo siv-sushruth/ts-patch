@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sliceTs5 = void 0;
+exports.sliceTs55 = sliceTs55;
 const module_slice_1 = require("./module-slice");
 /* ****************************************************************************************************************** */
 // region: Utils
 /* ****************************************************************************************************************** */
-function sliceTs5(moduleFile) {
+/**
+ * Slice 5.5+
+ */
+function sliceTs55(moduleFile) {
     let firstSourceFileStart;
     let wrapperStart;
     let wrapperEnd;
@@ -18,6 +21,7 @@ function sliceTs5(moduleFile) {
     const firstMatch = matcher.exec(content);
     if (!firstMatch?.[0])
         throw module_slice_1.ModuleSlice.createError();
+    let bodyWrapper = undefined;
     /* Handle wrapped */
     if (firstMatch[0].startsWith('var')) {
         wrapperStart = firstMatch.index;
@@ -30,13 +34,15 @@ function sliceTs5(moduleFile) {
             throw module_slice_1.ModuleSlice.createError();
         firstSourceFileStart = firstFileMatch.index;
         /* Find Wrapper end */
-        matcher = /^}\)\(\)\s*;?/gm;
+        // TODO - We may later want to find a better approach, but this will work for now
+        matcher = /^}\)\(typeof module !== "undefined" .+$/gm;
         matcher.lastIndex = firstFileMatch.index;
         const wrapperEndMatch = matcher.exec(content);
         if (!wrapperEndMatch?.[0])
             throw module_slice_1.ModuleSlice.createError();
         bodyEnd = wrapperEndMatch.index - 1;
         wrapperEnd = wrapperEndMatch.index + wrapperEndMatch[0].length;
+        bodyWrapper = { start: firstMatch[0], end: wrapperEndMatch[0] };
     }
     /* Handle non-wrapped */
     else {
@@ -56,9 +62,9 @@ function sliceTs5(moduleFile) {
         wrapperPos: wrapperStart != null ? { start: wrapperStart, end: wrapperEnd } : undefined,
         fileEnd: content.length,
         bodyPos: { start: bodyStart, end: bodyEnd },
-        sourceFileStarts
+        sourceFileStarts,
+        bodyWrapper
     };
 }
-exports.sliceTs5 = sliceTs5;
 // endregion
-//# sourceMappingURL=ts5.js.map
+//# sourceMappingURL=ts55.js.map

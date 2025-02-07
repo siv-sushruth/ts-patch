@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.check = void 0;
+exports.check = check;
 const system_1 = require("../system");
 const chalk_1 = __importDefault(require("chalk"));
 const ts_package_1 = require("../ts-package");
@@ -41,6 +41,5 @@ function check(moduleNameOrNames, opts) {
     }
     return res;
 }
-exports.check = check;
 // endregion
 //# sourceMappingURL=check.js.map

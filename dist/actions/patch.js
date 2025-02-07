@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patch = void 0;
+exports.patch = patch;
 const system_1 = require("../system");
 const ts_package_1 = require("../ts-package");
 const chalk_1 = __importDefault(require("chalk"));
@@ -43,7 +43,7 @@ function patch(moduleNameOrNames, opts) {
         /* Load Module */
         const { 1: moduleFile } = entry;
         const tsModule = (0, module_1.getTsModule)(tsPackage, moduleFile, { skipCache: true });
-        const { moduleName, modulePath } = tsModule;
+        const { moduleName, modulePath, moduleContentFilePath } = tsModule;
         log(['~', `Patching ${chalk_1.default.blueBright(moduleName)} in ${chalk_1.default.blueBright(path_1.default.dirname(modulePath))}`], system_1.LogLevel.verbose);
         try {
             const { js, dts, loadedFromCache } = (0, get_patched_source_1.getPatchedSource)(tsModule, { skipCache, log });
@@ -51,9 +51,9 @@ function patch(moduleNameOrNames, opts) {
             log([
                 '~',
                 `Writing patched ${chalk_1.default.blueBright(moduleName)} to ` +
-                    `${chalk_1.default.blueBright(modulePath)}${loadedFromCache ? ' (cached)' : ''}`
+                    `${chalk_1.default.blueBright(moduleContentFilePath)}${loadedFromCache ? ' (cached)' : ''}`
             ], system_1.LogLevel.verbose);
-            (0, utils_1.writeFileWithLock)(tsModule.modulePath, js);
+            (0, utils_1.writeFileWithLock)(moduleContentFilePath, js);
             if (dts)
                 (0, utils_1.writeFileWithLock)(tsModule.dtsPath, dts);
             log(['+', chalk_1.default.green(`Successfully patched ${chalk_1.default.bold.yellow(moduleName)}.\r\n`)], system_1.LogLevel.verbose);
@@ -73,6 +73,5 @@ function patch(moduleNameOrNames, opts) {
     }
     return true;
 }
-exports.patch = patch;
 // endregion
 //# sourceMappingURL=patch.js.map

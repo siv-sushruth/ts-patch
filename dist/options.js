@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInstallerOptions = exports.InstallerOptions = void 0;
+exports.InstallerOptions = void 0;
+exports.getInstallerOptions = getInstallerOptions;
 const system_1 = require("./system");
 var InstallerOptions;
 (function (InstallerOptions) {
@@ -28,5 +29,4 @@ function getInstallerOptions(options) {
         logger: res.logger ?? (0, system_1.createLogger)(res.logLevel, res.useColor, res.silent)
     });
 }
-exports.getInstallerOptions = getInstallerOptions;
 //# sourceMappingURL=options.js.map

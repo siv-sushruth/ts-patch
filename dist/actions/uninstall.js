@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uninstall = void 0;
+exports.uninstall = uninstall;
 const chalk_1 = __importDefault(require("chalk"));
 const config_1 = require("../config");
 const unpatch_1 = require("./unpatch");
@@ -22,6 +22,5 @@ function uninstall(opts) {
         log(['-', chalk_1.default.green(`ts-patch removed!`)]);
     return ret;
 }
-exports.uninstall = uninstall;
 // endregion
 //# sourceMappingURL=uninstall.js.map

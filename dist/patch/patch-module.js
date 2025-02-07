@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchModule = void 0;
+exports.patchModule = patchModule;
 const typescript_1 = __importDefault(require("typescript"));
 const fs_1 = __importDefault(require("fs"));
 const config_1 = require("../config");
@@ -31,6 +31,7 @@ function patchModule(tsModule, skipDts = false) {
             shouldWrap = true;
     }
     const source = tsModule.getUnpatchedSource();
+    const { bodyWrapper } = source;
     const printableBodyFooters = [];
     const printableFooters = [];
     /* Splice in full compiler functionality (if not already present) */
@@ -50,11 +51,14 @@ function patchModule(tsModule, skipDts = false) {
         }
         source.body.unshift(...tsSource.body);
         /* Fix early return */
-        const typescriptSection = source.body.find(s => s.srcFileName === 'src/typescript/typescript.ts');
-        if (!typescriptSection)
-            throw new system_1.PatchError(`Could not find Typescript source section`);
-        typescriptSection.transform([transformers_1.fixTsEarlyReturnTransformer]);
-        printableBodyFooters.push(`return returnResult;`);
+        // NOTE - This exists up until TS 5.4, but isn't there for 5.5+
+        if (tsModule.majorVer <= 5 && tsModule.minorVer <= 4) {
+            const typescriptSection = source.body.find(s => s.srcFileName === 'src/typescript/typescript.ts');
+            if (!typescriptSection)
+                throw new system_1.PatchError(`Could not find Typescript source section`);
+            typescriptSection.transform([transformers_1.fixTsEarlyReturnTransformer]);
+            printableBodyFooters.push(`return returnResult;`);
+        }
     }
     /* Patch Program */
     const programSection = source.body.find(s => s.srcFileName === 'src/compiler/program.ts');
@@ -62,10 +66,24 @@ function patchModule(tsModule, skipDts = false) {
         throw new system_1.PatchError(`Could not find Program source section`);
     programSection.transform([transformers_1.patchCreateProgramTransformer]);
     /* Add originalCreateProgram to exports */
-    const namespacesTsSection = source.body.find(s => s.srcFileName === 'src/typescript/_namespaces/ts.ts');
-    if (!namespacesTsSection)
-        throw new system_1.PatchError(`Could not find NamespacesTs source section`);
-    namespacesTsSection.transform([transformers_1.addOriginalCreateProgramTransformer]);
+    let createProgramAdded = false;
+    for (const fileName of transformers_1.createProgramExportFiles) {
+        // As of TS 5.5, we have to handle cases of multiple instances of the same file name. In this case, we need to
+        // handle both src/typescript/typescript.ts
+        const sections = source.body.filter(s => s.srcFileName === fileName);
+        for (const section of sections) {
+            try {
+                section.transform([transformers_1.addOriginalCreateProgramTransformer]);
+                createProgramAdded = true;
+            }
+            catch (e) {
+                if (!(e instanceof system_1.PatchError))
+                    throw e;
+            }
+        }
+    }
+    if (!createProgramAdded)
+        throw new system_1.PatchError(`Could not find any of the createProgram export files`);
     /* Patch emitter (for diagnostics tools) */
     const emitterSection = source.body.find(s => s.srcFileName === 'src/compiler/watch.ts');
     if (!emitterSection)
@@ -104,7 +122,8 @@ function patchModule(tsModule, skipDts = false) {
         list.push([source.fileHeader, indentLevel]);
         /* Body Wrapper Open */
         if (shouldWrap) {
-            list.push([`\n${config_1.tsWrapperOpen}\n`, indentLevel]);
+            if (bodyWrapper)
+                list.push([`\n${bodyWrapper.start}\n`, indentLevel]);
             indentLevel = 2;
         }
         /* Body Header*/
@@ -116,7 +135,8 @@ function patchModule(tsModule, skipDts = false) {
         /* Body Wrapper Close */
         if (shouldWrap) {
             indentLevel = 0;
-            list.push([`\n${config_1.tsWrapperClose}\n`, indentLevel]);
+            if (bodyWrapper)
+                list.push([`\n${bodyWrapper.end}\n`, indentLevel]);
         }
         /* File Footer */
         list.push([source.fileFooter, indentLevel]);
@@ -158,6 +178,5 @@ function patchModule(tsModule, skipDts = false) {
         baseSection.transform([transformer]);
     }
 }
-exports.patchModule = patchModule;
 // endregion
 //# sourceMappingURL=patch-module.js.map

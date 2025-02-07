@@ -22,6 +22,10 @@ var tsp = (function () {
             return tmpDir;
         }
         tsp.getTmpDir = getTmpDir;
+        function getTsInstance() {
+            return (typeof ts !== "undefined" ? ts : module.exports);
+        }
+        tsp.getTsInstance = getTsInstance;
         class TsPatchError extends Error {
             constructor(message, diagnostic) {
                 super(message);
@@ -92,7 +96,8 @@ var tsp = (function () {
                         if (tsp.tsExtensions.includes(resolvedPathExt)) {
                             if (!builtFiles.has(resolvedPath)) {
                                 const tsCode = fs.readFileSync(resolvedPath, "utf8");
-                                const jsCode = registerConfig.tsNodeInstance.compile(tsCode, resolvedPath);
+                                const newPath = resolvedPath.replace(/\.ts$/, ".mts");
+                                const jsCode = registerConfig.tsNodeInstance.compile(tsCode, newPath);
                                 const outputFileName = getHash() + ".mjs";
                                 const outputFilePath = path.join(tsp.getTmpDir("esm"), outputFileName);
                                 fs.writeFileSync(outputFilePath, jsCode, "utf8");
@@ -152,7 +157,7 @@ var tsp = (function () {
                 case "program":
                     const { addDiagnostic, removeDiagnostic, diagnostics } = tsp.diagnosticExtrasFactory(program);
                     pluginFactoryResult = factory(program, cleanConfig, {
-                        ts: ts,
+                        ts: tsp.getTsInstance(),
                         addDiagnostic,
                         removeDiagnostic,
                         diagnostics,
@@ -560,7 +565,7 @@ var tsp = (function () {
                 if (activeProgramTransformers.has(transformerKey))
                     continue;
                 activeProgramTransformers.add(transformerKey);
-                const newProgram = programTransformer(program, host, config, { ts: ts });
+                const newProgram = programTransformer(program, host, config, { ts: tsp.getTsInstance() });
                 if (typeof newProgram?.["emit"] === "function")
                     program = newProgram;
                 activeProgramTransformers.delete(transformerKey);
@@ -595,15 +600,16 @@ var tsp = (function () {
     (function (tsp) {
         tsp.tsShim = new Proxy({}, {
             get(_, key) {
-                if (ts) {
-                    return ts[key];
+                const target = tsp.getTsInstance();
+                if (target) {
+                    return target[key];
                 }
                 else {
                     try {
                         return eval(key);
                     }
                     catch (e) {
-                        return undefined;
+                        throw new tsp.TsPatchError(`Failed to find "${key}" in TypeScript shim`, e);
                     }
                 }
             },

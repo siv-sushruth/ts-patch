@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getModuleSource = void 0;
+exports.getModuleSource = getModuleSource;
 const source_section_1 = require("./source-section");
 const module_slice_1 = require("../slice/module-slice");
 // endregion
@@ -9,7 +9,7 @@ const module_slice_1 = require("../slice/module-slice");
 /* ****************************************************************************************************************** */
 function getModuleSource(tsModule) {
     const moduleFile = tsModule.getUnpatchedModuleFile();
-    const { firstSourceFileStart, fileEnd, wrapperPos, bodyPos, sourceFileStarts } = (0, module_slice_1.sliceModule)(moduleFile, tsModule.package.version);
+    const { firstSourceFileStart, fileEnd, wrapperPos, bodyPos, sourceFileStarts, bodyWrapper } = (0, module_slice_1.sliceModule)(moduleFile, tsModule.package.version);
     const fileHeaderEnd = wrapperPos?.start ?? firstSourceFileStart;
     return {
         fileHeader: (0, source_section_1.createSourceSection)(moduleFile, 'file-header', 0, fileHeaderEnd),
@@ -27,9 +27,9 @@ function getModuleSource(tsModule) {
                 ...this.body.map((section, i) => [`body`, section]),
                 ['file-footer', this.fileFooter],
             ];
-        }
+        },
+        bodyWrapper,
     };
 }
-exports.getModuleSource = getModuleSource;
 // endregion
 //# sourceMappingURL=module-source.js.map

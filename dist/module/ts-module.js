@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTsModule = exports.TsModule = void 0;
+exports.TsModule = void 0;
+exports.getTsModule = getTsModule;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const module_source_1 = require("./module-source");
@@ -16,6 +17,25 @@ const config_1 = require("../config");
 var TsModule;
 (function (TsModule) {
     TsModule.names = ['tsc.js', 'tsserverlibrary.js', 'typescript.js', 'tsserver.js'];
+    TsModule.contentFileMap = {
+        'tsc.js': '_tsc.js',
+        'tsserver.js': '_tsserver.js'
+    };
+    function getContentFileName(moduleName) {
+        return TsModule.contentFileMap[moduleName] || moduleName;
+    }
+    TsModule.getContentFileName = getContentFileName;
+    /* Determine shim redirect file - see: https://github.com/nonara/ts-patch/issues/174 */
+    function getContentFilePathForModulePath(modulePath) {
+        const baseName = path_1.default.basename(modulePath);
+        const redirectFile = TsModule.contentFileMap[baseName];
+        const maybeModuleContentPath = redirectFile && path_1.default.join(path_1.default.dirname(modulePath), redirectFile);
+        const moduleContentPath = maybeModuleContentPath && fs_1.default.existsSync(maybeModuleContentPath)
+            ? maybeModuleContentPath
+            : modulePath;
+        return moduleContentPath;
+    }
+    TsModule.getContentFilePathForModulePath = getContentFilePathForModulePath;
 })(TsModule || (exports.TsModule = TsModule = {}));
 function getTsModule(tsPackage, moduleNameOrModuleFile, options) {
     const skipCache = options?.skipCache;
@@ -64,6 +84,7 @@ function getTsModule(tsPackage, moduleNameOrModuleFile, options) {
         moduleName,
         modulePath,
         moduleFile,
+        moduleContentFilePath: moduleFile.contentFilePath,
         dtsPath,
         cacheKey,
         backupCachePaths,
@@ -88,6 +109,5 @@ function getTsModule(tsPackage, moduleNameOrModuleFile, options) {
     tsPackage.moduleCache.set(moduleName, tsModule);
     return tsModule;
 }
-exports.getTsModule = getTsModule;
 // endregion
 //# sourceMappingURL=ts-module.js.map

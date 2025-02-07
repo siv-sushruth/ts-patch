@@ -3,6 +3,9 @@ import { ModuleSource } from './module-source';
 import { ModuleFile } from './module-file';
 export declare namespace TsModule {
     const names: readonly ["tsc.js", "tsserverlibrary.js", "typescript.js", "tsserver.js"];
+    const contentFileMap: Record<string, string>;
+    function getContentFileName(moduleName: typeof names[number]): string;
+    function getContentFilePathForModulePath(modulePath: string): string;
 }
 export interface TsModule {
     package: TsPackage;
@@ -11,6 +14,7 @@ export interface TsModule {
     isPatched: boolean;
     moduleName: TsModule.Name;
     modulePath: string;
+    moduleContentFilePath: string;
     moduleFile: ModuleFile;
     dtsPath: string | undefined;
     cacheKey: string;

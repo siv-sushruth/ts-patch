@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLiveModule = void 0;
+exports.getLiveModule = getLiveModule;
 const path_1 = __importDefault(require("path"));
 const ts_module_1 = require("./ts-module");
 const ts_package_1 = require("../ts-package");
@@ -21,6 +21,5 @@ function getLiveModule(moduleName) {
     const { js } = (0, get_patched_source_1.getPatchedSource)(tsModule, { skipCache, skipDts: true });
     return { js, tsModule };
 }
-exports.getLiveModule = getLiveModule;
 // endregion
 //# sourceMappingURL=get-live-module.js.map

@@ -13,8 +13,6 @@ export declare const defaultInstallLibraries: string[];
 export declare const corePatchName = "<core>";
 export declare const modulePatchFilePath: string;
 export declare const dtsPatchFilePath: string;
-export declare const tsWrapperOpen = "var ts = (() => {";
-export declare const tsWrapperClose = "})();";
 export declare const execTscCmd = "execTsc";
 export declare const cachedFilePatchedPrefix = "patched.";
 export declare const lockFileDir = "locks";

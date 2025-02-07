@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lockFileDir = exports.cachedFilePatchedPrefix = exports.execTscCmd = exports.tsWrapperClose = exports.tsWrapperOpen = exports.dtsPatchFilePath = exports.modulePatchFilePath = exports.corePatchName = exports.defaultInstallLibraries = exports.defaultNodePrinterOptions = exports.RESOURCES_PATH = exports.tspPackageJSON = exports.appRoot = void 0;
+exports.lockFileDir = exports.cachedFilePatchedPrefix = exports.execTscCmd = exports.dtsPatchFilePath = exports.modulePatchFilePath = exports.corePatchName = exports.defaultInstallLibraries = exports.defaultNodePrinterOptions = exports.RESOURCES_PATH = exports.tspPackageJSON = exports.appRoot = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const typescript_1 = __importDefault(require("typescript"));
@@ -39,9 +39,6 @@ exports.defaultInstallLibraries = ['tsc.js', 'typescript.js'];
 exports.corePatchName = `<core>`;
 exports.modulePatchFilePath = path_1.default.resolve(exports.appRoot, exports.tspPackageJSON.directories.resources, 'module-patch.js');
 exports.dtsPatchFilePath = path_1.default.resolve(exports.appRoot, exports.tspPackageJSON.directories.resources, 'module-patch.d.ts');
-// TODO - should do this in a better/dynamic way later
-exports.tsWrapperOpen = `var ts = (() => {`;
-exports.tsWrapperClose = `})();`;
 exports.execTscCmd = 'execTsc';
 // endregion
 /* ****************************************************************************************************************** */

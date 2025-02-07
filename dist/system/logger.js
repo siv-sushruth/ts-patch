@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createLogger = exports.LogLevel = void 0;
+exports.LogLevel = void 0;
+exports.createLogger = createLogger;
 const chalk_1 = __importDefault(require("chalk"));
 const strip_ansi_1 = __importDefault(require("strip-ansi"));
 /* ****************************************************************************************************************** */
@@ -43,6 +44,5 @@ function createLogger(logLevel, useColour = true, isSilent = false) {
         (isError ? console.error : console.log)(msg);
     };
 }
-exports.createLogger = createLogger;
 // endregion
 //# sourceMappingURL=logger.js.map
