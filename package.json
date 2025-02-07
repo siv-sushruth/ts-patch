@@ -17,8 +17,7 @@
     "test": "jest",
     "perf": "cd test && yarn run perf",
     "------------": "-------------",
-    "prepare": "ts-patch install -s && yarn prepare:test",
-    "prepare:test": "cd test && yarn install",
+    "prepare": "node -e \"if(require('./package.json').private) { require('child_process').execSync('ts-patch install -s && cd test && yarn install', {stdio: 'inherit'}) }\"",
     "postbuild": "node scripts/postbuild.js"
   },
   "private": true,
